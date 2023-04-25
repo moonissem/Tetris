@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Tetris</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+    <script type="module">
+		import init from "./init.js";
+
+		window.onload = init;
+    </script>
+</head>
+<body>
+<div class="container mt-3">
+    <div class="d-flex">
+        <div class="col leftCol m-5">
+            <div class="row">
+                <a href="https://en.wikipedia.org/wiki/Tetris">
+                    <img src="resources/static/images/The_Tetris_Company_logo_2019.png" class="logo" alt="Tetris logo">
+                </a>
+            </div>
+            <div class="row">
+                <button type="button" class="btn btn-primary btn-lg" id="playButton">Start</button>
+            </div>
+            <div class="row text-white fs-5 fw-bold">
+                <div class="col">
+                    <p>Level: <span id="level">01</span></p>
+                    <p>Lines: <span id="lines">0000</span></p>
+                    <p>Score: <span id="score">000000</span></p>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn btn-secondary btn-sm" id="settingsButton">&#9881;&nbsp;Settings</button>
+            </div>
+            <div class="row">
+                <button class="btn btn-secondary btn-sm" id="helpButton">&quest;&nbsp;Help</button>
+            </div>
+        </div>
+        <div class="col middleCol">
+            <div class="row justify-content-center mainCanvas">
+                <canvas id="gameCanvas" width="100" height="220"></canvas>
+            </div>
+        </div>
+        <div class="col rightCol m-5 text-white fs-5 fw-bold">
+            <span>Next</span>
+            <div class="row sideCanvases">
+                <canvas id="nextCanvas1" width="20" height="20"></canvas>
+            </div>
+            <div class="row sideCanvases">
+                <canvas id="nextCanvas2" width="20" height="20"></canvas>
+            </div>
+            <div class="row sideCanvases">
+                <canvas id="nextCanvas3" width="20" height="20"></canvas>
+            </div>
+            <br>
+            <span>Hold</span>
+            <div class="row sideCanvases">
+                <canvas id="holdCanvas" width="20" height="20"></canvas>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row text-center text-white fs-6">
+        Tetris ® & © 1985~2023 Tetris Holding <br>
+        Tetris logos, Tetris theme song and Tetriminos are trademarks of Tetris Holding.
+        The Tetris trade dress is owned by Tetris Holding. Licensed to The Tetris Company.
+        Tetris Game Design by Alexey Pajitnov.
+        Tetris Logo Design by Roger Dean.
+        All Rights Reserved.
+        All other trademarks are the property of their respective owners.
+    </div>
+    <div class="modal" id="settingsModal" tabindex="-1">
+        <div class="modal-content text-white fw-bold">
+            <span class="modalCloseButton" id="settingsModalCloseButton">&times;</span>
+            <h3>Settings</h3>
+            <hr>
+            <form>
+                <fieldset>
+                    <legend>Sound</legend>
+                    <input type="checkbox" id="toggleMuteSounds" name="toggleMuteSounds">
+                    <label for="toggleMuteSounds">Mute all sounds</label>
+                </fieldset>
+                <br>
+                <fieldset>
+                    <legend>Display</legend>
+                    <input type="checkbox" id="toggleDisplayGhostTetromino" name="toggleDisplayGhostTetromino">
+                    <label for="toggleDisplayGhostTetromino">Hide ghost tetromino</label>
+                    <br>
+                    <input type="checkbox" id="toggleDisplayNextTetrominoes" name="toggleDisplayNextTetrominoes">
+                    <label for="toggleDisplayNextTetrominoes">Hide next tetrominoes</label>
+                </fieldset>
+                <br>
+                <fieldset>
+                    <legend>Gameplay</legend>
+                    <input type="checkbox" id="toggleAllowHoldTetromino" name="toggleAllowHoldTetromino">
+                    <label for="toggleAllowHoldTetromino">Disable holding tetrominoes</label>
+                    <br>
+                    <div id="slider">
+                        <p>Difficulty&emsp;<span>-
+                            <label for="speedSlider"></label><input type="range" id="speedSlider" name="speedSlider"
+                                                                    min="1" max="5" value="3">
+                        +</span></p>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="modal" id="helpModal" tabindex="-1">
+        <div class="modal-content text-white fw-bold">
+            <span class="modalCloseButton" id="helpModalCloseButton">&times;</span>
+            <h3>Help</h3>
+            <hr>
+            <fieldset>
+                <legend>Controls</legend>
+                <p><img src="https://img.icons8.com/ios/50/null/enter-key.png" alt="Enter key"/>&nbsp;Start or resume
+                    game</p>
+                <p><img src="https://img.icons8.com/ios/50/null/p-key.png" alt="P key"/><img
+                        src="https://img.icons8.com/ios/50/null/esc.png" alt="Esc key"/><img
+                        src="https://img.icons8.com/ios/50/null/f1-key.png" alt="F1 key"/>&nbsp;Pause</p>
+                <p><img src="https://img.icons8.com/ios/50/null/left-squared--v2.png" alt="Left arrow key"/>&nbsp;Move
+                    left</p>
+                <p><img src="https://img.icons8.com/ios/50/null/right-squared--v2.png" alt="Right arrow key"/>&nbsp;Move
+                    right</p>
+                <p><img src="https://img.icons8.com/ios/50/null/down-squared--v2.png" alt="Down arrow key"/>&nbsp;Move
+                    down</p>
+                <p><img src="https://img.icons8.com/ios/50/null/space-key.png" alt="Space key"/>&nbsp;Hard drop</p>
+                <p><img src="https://img.icons8.com/ios/50/null/up-squared.png" alt="Up arrow key"/><img
+                        src="https://img.icons8.com/ios/50/null/x-key.png" alt="X key"/>&nbsp;Rotate clockwise</p>
+                <p><img src="https://img.icons8.com/ios/50/null/z-key.png" alt="Z key"/><img
+                        src="https://img.icons8.com/ios/50/null/ctrl.png" alt="Control key"/>&nbsp;Rotate
+                    counterclockwise</p>
+                <p><img src="https://img.icons8.com/ios/50/null/c-key.png" alt="C key"/><img
+                        src="https://img.icons8.com/ios/50/null/shift--v2.png" alt=""/>&nbsp;Hold tetromino</p>
+                <p style="text-align: right; font-size: xx-small"><a target="_blank"
+                                                                     href="https://icons8.com/icon/57944/control"
+                                                                     style="color: white; text-decoration: none">&nbsp;Icons
+                    by Icons8</a></p>
+            </fieldset>
+        </div>
+    </div>
+</div>
+</body>
+</html>
